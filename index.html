@@ -6,6 +6,7 @@
   <title>Pradico | ChatGPT Plus for $5</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="pradico-logo.png" type="image/png">
 </head>
 <body>
   <header>
@@ -104,7 +105,25 @@
     <div class="info-card">
       <h3>Sign Up Now</h3>
       <p>🎓 Ready to get started? Fill out the quick form below.</p>
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfmOB0rEbCDAPFX-fZYKiygm9RaupoilITeFNIZbR5RhGWYkg/viewform?embedded=true" width="640" height="1228" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+      <form id="custom-signup-form" style="width:100%;max-width:600px;">
+        <label>First Name*<br>
+          <input type="text" name="firstName" required style="width:100%;padding:0.7em;margin-bottom:1em;">
+        </label>
+        <label>Last Name*<br>
+          <input type="text" name="lastName" required style="width:100%;padding:0.7em;margin-bottom:1em;">
+        </label>
+        <label>Personal Email (Not School Email)*<br>
+          <input type="email" name="email" required style="width:100%;padding:0.7em;margin-bottom:1em;">
+        </label>
+        <label>Phone Number*<br>
+          <input type="tel" name="phone" required style="width:100%;padding:0.7em;margin-bottom:1em;">
+        </label>
+        <label>Name of Reference (If Applicable)<br>
+          <input type="text" name="reference" style="width:100%;padding:0.7em;margin-bottom:1em;">
+        </label>
+        <button type="submit" style="background:#60a5fa;color:#1e293b;padding:0.8em 2em;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Submit</button>
+        <div id="form-message" style="margin-top:1em;font-weight:600;"></div>
+      </form>
     </div>
   </section>
 
@@ -120,5 +139,37 @@
   </footer>
   <img src="pradico-logo.png" alt="Pradico Logo" class="logo-bottom-right" />
   <script src="script.js"></script>
+  <script>
+  document.getElementById('custom-signup-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      firstName: form.firstName.value.trim(),
+      lastName: form.lastName.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      reference: form.reference.value.trim()
+    };
+    const messageDiv = document.getElementById('form-message');
+    messageDiv.textContent = 'Submitting...';
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        messageDiv.textContent = '✅ Registration successful! We will contact you soon.';
+        form.reset();
+      } else {
+        messageDiv.textContent = '❌ Registration failed. Please try again.';
+      }
+    } catch (err) {
+      messageDiv.textContent = '❌ Error connecting to server. Please try again.';
+    }
+  });
+  </script>
 </body>
 </html>

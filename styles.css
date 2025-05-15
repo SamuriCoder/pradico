@@ -538,4 +538,40 @@ strong {
   color: #e2e8f0;
   font-size: 1rem;
   line-height: 1.6;
+}
+
+/* Seamless input styles for the custom form */
+#custom-signup-form input[type="text"],
+#custom-signup-form input[type="email"],
+#custom-signup-form input[type="tel"] {
+  background: #232e41;
+  color: #e0e7ef;
+  border: 1.5px solid #334155;
+  border-radius: 8px;
+  padding: 0.7em;
+  margin-bottom: 1em;
+  font-size: 1.08em;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+}
+
+#custom-signup-form input[type="text"]:focus,
+#custom-signup-form input[type="email"]:focus,
+#custom-signup-form input[type="tel"]:focus {
+  border: 1.5px solid #60a5fa;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.15);
+  background: #1e293b;
+}
+
+#custom-signup-form label {
+  color: #dbeafe;
+  font-weight: 500;
+  margin-bottom: 0.2em;
+  display: block;
+}
+
+#custom-signup-form input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
 } 
