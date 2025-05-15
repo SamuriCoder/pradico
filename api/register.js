@@ -1,4 +1,5 @@
 import { google } from 'googleapis';
+import { GoogleAuth } from 'google-auth-library';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,10 +9,12 @@ export default async function handler(req, res) {
 
   try {
     const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS);
-    const auth = new google.auth.GoogleAuth({
+
+    const auth = new GoogleAuth({
       credentials,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
+
     const sheets = google.sheets({ version: 'v4', auth });
 
     const { firstName, lastName, email, phone, reference } = req.body || {};
@@ -20,7 +23,10 @@ export default async function handler(req, res) {
       return;
     }
 
-    const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+    const timestamp = new Date().toLocaleString('en-US', {
+      timeZone: 'America/Los_Angeles',
+    });
+
     const values = [[timestamp, firstName, lastName, email, phone, reference || '']];
 
     await sheets.spreadsheets.values.append({
