@@ -1,38 +1,27 @@
-// api/register.js
 import { google } from 'googleapis';
-
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
   try {
-    // Destructure fields from request body
-    const { firstName, lastName, email, phone, reference } = req.body;
-
-    // Validate required fields
-    if (!firstName || !lastName || !email || !phone) {
-      return res.status(400).json({ error: 'Missing required fields.' });
-    }
-
-    // Parse credentials from environment variable
-    const CREDENTIALS = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS);
+    const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS);
     const auth = new google.auth.GoogleAuth({
-      credentials: CREDENTIALS,
-      scopes: SCOPES,
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
-
     const sheets = google.sheets({ version: 'v4', auth });
 
-    const timestamp = new Date().toLocaleString('en-US', {
-      timeZone: 'America/Los_Angeles',
-    });
+    const { firstName, lastName, email, phone, reference } = req.body || {};
+    if (!firstName || !lastName || !email || !phone) {
+      res.status(400).json({ error: 'Missing required fields.' });
+      return;
+    }
 
-    const values = [
-      [timestamp, firstName, lastName, email, phone, reference || '']
-    ];
+    const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+    const values = [[timestamp, firstName, lastName, email, phone, reference || '']];
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.SPREADSHEET_ID,
