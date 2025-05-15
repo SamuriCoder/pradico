@@ -161,8 +161,9 @@
       });
       const result = await res.json();
       if (result.success) {
-        messageDiv.textContent = '✅ Registration successful! We will contact you soon.';
+        messageDiv.textContent = '';
         form.reset();
+        showSuccessOverlay();
       } else {
         messageDiv.textContent = '❌ Registration failed. Please try again.';
       }
@@ -170,6 +171,38 @@
       messageDiv.textContent = '❌ Error connecting to server. Please try again.';
     }
   });
+
+  function showSuccessOverlay() {
+    const overlay = document.getElementById('success-overlay');
+    overlay.style.display = 'flex';
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.4s';
+    setTimeout(() => {
+      overlay.style.opacity = '1';
+      // Animate checkmark
+      const checkmark = document.getElementById('checkmark-svg');
+      checkmark.style.transform = 'scale(0.7)';
+      checkmark.style.opacity = '0';
+      checkmark.style.transition = 'transform 0.5s cubic-bezier(.4,2,.6,1), opacity 0.5s';
+      setTimeout(() => {
+        checkmark.style.transform = 'scale(1)';
+        checkmark.style.opacity = '1';
+      }, 100);
+    }, 10);
+    // Hide overlay after 1.7s
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 400);
+    }, 1700);
+  }
   </script>
+  <div id="success-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:2000;background:rgba(30,41,59,0.96);align-items:center;justify-content:center;">
+    <svg id="checkmark-svg" width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="54" fill="none" stroke="#60a5fa" stroke-width="8"/>
+      <polyline points="35,65 55,85 85,45" fill="none" stroke="#60a5fa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
 </body>
 </html>
