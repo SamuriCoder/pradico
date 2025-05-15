@@ -179,24 +179,26 @@
     overlay.style.transition = 'opacity 0.4s';
     setTimeout(() => {
       overlay.style.opacity = '1';
-      // Animate checkmark drawing
+      // Animate circle drawing first
       const poly = document.getElementById('checkmark-poly');
       const circle = document.getElementById('checkmark-circle');
-      poly.style.strokeDasharray = poly.getTotalLength();
-      poly.style.strokeDashoffset = poly.getTotalLength();
-      poly.style.transition = 'stroke-dashoffset 0.7s cubic-bezier(.4,2,.6,1)';
-      setTimeout(() => {
-        poly.style.strokeDashoffset = 0;
-      }, 200);
-      // Animate circle drawing
+      // Prepare for animation
       circle.style.strokeDasharray = circle.getTotalLength();
       circle.style.strokeDashoffset = circle.getTotalLength();
       circle.style.transition = 'stroke-dashoffset 0.7s cubic-bezier(.4,2,.6,1)';
+      poly.style.strokeDasharray = poly.getTotalLength();
+      poly.style.strokeDashoffset = poly.getTotalLength();
+      poly.style.transition = 'stroke-dashoffset 0.5s cubic-bezier(.4,2,.6,1)';
+      // Animate circle
       setTimeout(() => {
         circle.style.strokeDashoffset = 0;
-      }, 0);
+        // Animate checkmark after circle is done
+        setTimeout(() => {
+          poly.style.strokeDashoffset = 0;
+        }, 600); // Start checkmark after most of the circle is drawn
+      }, 50);
     }, 10);
-    // Hide overlay after 1.7s
+    // Hide overlay after 2.2s
     setTimeout(() => {
       overlay.style.opacity = '0';
       setTimeout(() => {
@@ -207,7 +209,7 @@
         poly.style.strokeDashoffset = poly.getTotalLength();
         circle.style.strokeDashoffset = circle.getTotalLength();
       }, 400);
-    }, 2000);
+    }, 2200);
   }
   </script>
   <div id="success-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:2000;background:rgba(30,41,59,0.96);align-items:center;justify-content:center;flex-direction:column;">
